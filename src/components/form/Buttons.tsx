@@ -56,7 +56,7 @@ export const CardSubmitButton = ({ isFavorite }: { isFavorite: boolean }) => {
   const { pending } = useFormStatus();
   return (
     <Button
-      type="sumbit"
+      type="submit"
       size="icon"
       variant="outline"
       className=" p-2 cursor-pointer"
