@@ -1,6 +1,7 @@
+import { fetchReservations } from "@/utils/actions";
+import Link from "next/link";
 import EmptyList from "@/components/home/EmptyList";
 import CountryFlagAndName from "@/components/card/CountryFlagAndName";
-import Link from "next/link";
 
 import { formatDate, formatCurrency } from "@/utils/format";
 import {
@@ -13,19 +14,16 @@ import {
   TableRow,
 } from "@/components/ui/table";
 
-import FormContainer from "@/components/form/FormContainer";
-import { IconButton } from "@/components/form/Buttons";
-import { fetchBookings, deleteBookingAction } from "@/utils/actions";
-
-async function BookingsPage() {
-  const bookings = await fetchBookings();
-  if (bookings.length === 0) return <EmptyList />;
-
+export default async function ReservationsPage() {
+  const reservations = await fetchReservations();
+  if (reservations.length === 0) return <EmptyList />;
   return (
     <div className="mt-16">
-      <h4 className="mb-4 capitalize">total bookings : {bookings.length}</h4>
+      <h4 className="mb-4 capitalize">
+        total reservations : {reservations.length}
+      </h4>
       <Table>
-        <TableCaption>A list of your recent bookings</TableCaption>
+        <TableCaption>A list of recent reservations</TableCaption>
         <TableHeader>
           <TableRow>
             <TableHead>Property Name</TableHead>
@@ -34,21 +32,20 @@ async function BookingsPage() {
             <TableHead>Total</TableHead>
             <TableHead>Check In</TableHead>
             <TableHead>Check Out</TableHead>
-            <TableHead>Actions</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
-          {bookings.map((booking) => {
-            const { id, orderTotal, totalNights, checkIn, checkOut } = booking;
-            const { id: propertyId, name, country } = booking.property;
+          {reservations.map((item) => {
+            const { id, orderTotal, totalNights, checkIn, checkOut } = item;
+            const { id: propertyId, name, country } = item.property;
             const startDate = formatDate(checkIn);
             const endDate = formatDate(checkOut);
             return (
-              <TableRow key={booking.id}>
+              <TableRow key={id}>
                 <TableCell>
                   <Link
                     href={`/properties/${propertyId}`}
-                    className=" underline text-muted-foreground tracking-wide"
+                    className="underline text-muted-foreground tracking-wide"
                   >
                     {name}
                   </Link>
@@ -60,9 +57,6 @@ async function BookingsPage() {
                 <TableCell>{formatCurrency(orderTotal)}</TableCell>
                 <TableCell>{startDate}</TableCell>
                 <TableCell>{endDate}</TableCell>
-                <TableCell>
-                  <DeleteBooking bookingId={id} />
-                </TableCell>
               </TableRow>
             );
           })}
@@ -71,14 +65,3 @@ async function BookingsPage() {
     </div>
   );
 }
-
-function DeleteBooking({ bookingId }: { bookingId: string }) {
-  const deleteBooking = deleteBookingAction.bind(null, { bookingId });
-
-  return (
-    <FormContainer action={deleteBooking}>
-      <IconButton actionType="delete" />
-    </FormContainer>
-  );
-}
-export default BookingsPage;

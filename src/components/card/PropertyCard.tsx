@@ -29,7 +29,7 @@ export default function PropertyCard({
             {name.substring(0, 30)}
           </h3>
           {/* property rating */}
-          <PropertyRating inPage={false} />
+          <PropertyRating inPage={false} propertyId={property.id} />
         </div>
         <p className=" text-sm mt-1 text-muted-foreground">
           {tagline.substring(0, 40)}
