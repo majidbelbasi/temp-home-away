@@ -7,7 +7,7 @@ export default async function PropertyReviews({
   propertyId: string;
 }) {
   const reviews = await fetchPropertyReviews(propertyId);
-  if (reviews.length < 1) return null;
+  if (reviews.length === 0) return null;
 
   return (
     <div className="mt-8">
